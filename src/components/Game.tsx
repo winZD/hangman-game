@@ -125,7 +125,10 @@ export const Game = () => {
 
   return (
     <>
-      <p>Timer: {timer}</p>
+      <div>
+        {" "}
+        <p>Timer: {timer}</p>
+      </div>
       {gameWon && <p>Game won</p>}
       <div>
         <GameFigure errors={errors} />
