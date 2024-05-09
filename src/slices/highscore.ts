@@ -1,9 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { HighscoreParams, postHighscore } from "../services/highscore";
-
-interface Highscore {
-  data: any;
-}
+import { Highscore } from "../models/highscore";
 
 const initialState: Highscore = {
   data: "",

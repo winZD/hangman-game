@@ -1,14 +1,5 @@
 import axios from "axios";
-
-export interface UserHighscore {
-  id: number;
-  quoteId: string;
-  length: number;
-  uniqueCharacters: number;
-  userName: string;
-  errors: number;
-  duration: number;
-}
+import { UserHighscore } from "../models/userHighscores";
 
 const getHighscores = async (): Promise<UserHighscore[]> => {
   const response = await axios.get<UserHighscore[]>(

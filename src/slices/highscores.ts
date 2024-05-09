@@ -1,20 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { HighscoreParams } from "../services/highscore";
+
 import getHighscores from "../services/getHighscores";
+import { UserHighscore } from "../models/userHighscores";
 
-export interface UserHighscore {
-  data: {
-    id: number;
-    quoteId: string;
-    length: number;
-    uniqueCharacters: number;
-    userName: string;
-    errors: number;
-    duration: number;
-  }[];
-}
-
-const initialState: UserHighscore = {
+const initialState: { data: UserHighscore[] } = {
   data: [],
 };
 
@@ -32,7 +21,7 @@ export const getHighscoresSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getHighscoresThunk.fulfilled, (state, action) => {
-      state.data = [...action.payload];
+      state.data = action.payload;
     });
   },
 });

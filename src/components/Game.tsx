@@ -6,10 +6,9 @@ import { Button } from "@mantine/core";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import GameFigure from "./GameFigure";
-import { postHighscore } from "../services/highscore";
 import { highscoreThunk } from "../slices/highscore";
 
-import { getQuoteThunk } from "../slices/quote";
+import { keyboardLetters } from "../models/letters";
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const Game = () => {
@@ -20,35 +19,6 @@ export const Game = () => {
   const [errors, setErrors] = useState(0);
   const [gameWon, setGameWon] = useState(false);
   const [isUppercase, setUppercase] = useState(false);
-
-  const [keyboardLetters, setKeyboardLetters] = useState([
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-  ]);
 
   const dispatch = useAppDispatch();
   /* 
@@ -120,7 +90,7 @@ export const Game = () => {
 
   useEffect(() => {
     fetchText();
-    dispatch(getQuoteThunk());
+    /* dispatch(getQuoteThunk()); */
   }, [dispatch]);
 
   return (

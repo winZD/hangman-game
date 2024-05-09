@@ -2,17 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { HighscoreParams } from "../services/highscore";
 import getHighscores from "../services/getHighscores";
 import getQuote from "../services/getQuote";
-
-export interface Quote {
-  _id: string;
-  content: string;
-  author: string;
-  tags: string[];
-  authorSlug: string;
-  length: number;
-  dateAdded: Date | null;
-  dateModified: Date | null;
-}
+import { Quote } from "../models/quote";
 
 const initialState: Quote = {
   _id: "",
