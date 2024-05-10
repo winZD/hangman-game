@@ -30,7 +30,7 @@ export const Game = () => {
       const response = await axios.get("https://api.quotable.io/random");
       console.log(response);
       const { content } = response.data;
-      setQuote(content.toUpperCase());
+      setQuote(content);
       setMaskedQuote(content.replace(/[a-zA-Z]/g, "_"));
     } catch (error) {
       console.error(error);
@@ -45,12 +45,15 @@ export const Game = () => {
       const newMaskedQuote = replaceUnderscores(maskedQuote, lowerCaseLetter);
       setMaskedQuote(newMaskedQuote);
     } */
-    if (quote.includes(letterToUppercase)) {
-      console.log("UPPERCASE: ", letterToUppercase);
-      const newMaskedQuote = replaceUnderscores(maskedQuote, letterToUppercase);
+    if (quote.includes(letter)) {
+      console.log("UPPERCASE: ", letter);
+      const newMaskedQuote = replaceUnderscores(maskedQuote, letter);
       setMaskedQuote(newMaskedQuote);
     }
-    if (!quote.includes(letter.toUpperCase())) {
+    if (
+      !quote.includes(letter.toLowerCase()) &&
+      !quote.includes(letter.toUpperCase())
+    ) {
       // Increment the error count if the letter is not found and is not uppercase
       setErrors(errors + 1);
     }
@@ -74,6 +77,11 @@ export const Game = () => {
 
         maskedQuoteArray[i] = guessedLetter.toLowerCase();
       } */
+      if (quote[i] === guessedLetter && maskedQuoteArray[i] === "_") {
+        {
+          maskedQuoteArray[i] = guessedLetter;
+        }
+      }
       if (
         quote[i] === guessedLetter.toUpperCase() &&
         maskedQuoteArray[i] === "_"
