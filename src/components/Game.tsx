@@ -30,7 +30,7 @@ export const Game = () => {
       const response = await axios.get("https://api.quotable.io/random");
       console.log(response);
       const { content } = response.data;
-      setQuote(content);
+      setQuote(content.toUpperCase());
       setMaskedQuote(content.replace(/[a-zA-Z]/g, "_"));
     } catch (error) {
       console.error(error);
@@ -38,13 +38,24 @@ export const Game = () => {
   };
 
   const handleLetterGuess = (letter: string) => {
-    const lowerCaseLetter = letter.toLowerCase(); // Ensure the comparison is case-insensitive
-    if (quote.includes(lowerCaseLetter)) {
-      const newMaskedQuote = replaceUnderscores(maskedQuote, letter);
+    /* const lowerCaseLetter = letter.toLowerCase(); */
+    const letterToUppercase = letter.toUpperCase(); // Ensure the comparison is case-insensitive
+    /*  if (!isUppercase && quote.includes(lowerCaseLetter)) {
+      console.log("LOWERCASE: ", lowerCaseLetter);
+      const newMaskedQuote = replaceUnderscores(maskedQuote, lowerCaseLetter);
       setMaskedQuote(newMaskedQuote);
-    } else {
+    } */
+    if (quote.includes(letterToUppercase)) {
+      console.log("UPPERCASE: ", letterToUppercase);
+      const newMaskedQuote = replaceUnderscores(maskedQuote, letterToUppercase);
+      setMaskedQuote(newMaskedQuote);
+    }
+    if (!quote.includes(letter.toUpperCase())) {
+      // Increment the error count if the letter is not found and is not uppercase
       setErrors(errors + 1);
     }
+
+    console.log(isUppercase ? letter.toUpperCase() : letter.toLowerCase());
   };
 
   const replaceUnderscores = (maskedQuote: string, guessedLetter: string) => {
@@ -55,17 +66,24 @@ export const Game = () => {
     for (let i = 0; i < quote.length; i++) {
       // If the original quote at this position matches the guessed letter
       // and the maskedQuote at this position is an underscore
-      if (
-        quote[i] ===
-          (isUppercase ? guessedLetter.toUpperCase() : guessedLetter) &&
+      /*  if (
+        quote[i] === guessedLetter.toLowerCase() &&
         maskedQuoteArray[i] === "_"
       ) {
         // Replace the underscore with the guessed letter
 
-        maskedQuoteArray[i] = guessedLetter;
+        maskedQuoteArray[i] = guessedLetter.toLowerCase();
+      } */
+      if (
+        quote[i] === guessedLetter.toUpperCase() &&
+        maskedQuoteArray[i] === "_"
+      ) {
+        {
+          maskedQuoteArray[i] = guessedLetter.toUpperCase();
+        }
       }
     }
-    if (maskedQuote.toLowerCase() === quote.toLowerCase()) {
+    if (maskedQuoteArray.join("").toUpperCase() === quote) {
       setGameWon(true);
       setTimerStarted(false);
       clearInterval(interval.current);
@@ -104,21 +122,47 @@ export const Game = () => {
         <GameFigure errors={errors} />
 
         <h1>{logInData.name + " "}Enter the game</h1>
-        <p>{maskedQuote}</p>
+        {maskedQuote.split("").map((char, index) =>
+          char === "_" ? (
+            <span style={{ padding: 2 }} key={index}>
+              {"_"}
+            </span>
+          ) : (
+            char
+          )
+        )}
+
         <p>Errors: {errors}</p>
 
         <div>
-          {keyboardLetters.map((letter) => (
-            <button key={letter} onClick={() => handleLetterGuess(letter)}>
-              {letter}
-            </button>
-          ))}
-          <button
+          <div>
+            {keyboardLetters.slice(0, 13).map((letter) => (
+              <button
+                style={{ margin: 3 }}
+                key={letter}
+                onClick={() => handleLetterGuess(letter)}
+              >
+                {letter}
+              </button>
+            ))}
+          </div>
+          <div>
+            {keyboardLetters.slice(13).map((letter) => (
+              <button
+                style={{ margin: 3 }}
+                key={letter}
+                onClick={() => handleLetterGuess(letter)}
+              >
+                {letter}
+              </button>
+            ))}
+          </div>
+          {/*   <button
             style={{ background: isUppercase ? "green" : "red" }}
             onClick={() => setUppercase(!isUppercase)}
           >
             CAPS LOCK
-          </button>
+          </button> */}
         </div>
         <Button disabled={errors >= 6} onClick={async () => await fetchText()}>
           Refresh
