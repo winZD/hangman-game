@@ -96,7 +96,6 @@ export const Game = () => {
     return uniqueCharacters.size;
   }
   useEffect(() => {
-    /*  fetchText(); */
     dispatch(getQuoteThunk()).then((data) => {
       setQuote(data?.payload as Quote);
       setMaskedQuote(
@@ -136,9 +135,9 @@ export const Game = () => {
               char
             )
           )}
-          <p>
+          <div>
             <Badge color={errors ? "red" : "green"}>Errors: {errors}</Badge>
-          </p>
+          </div>
 
           <div>
             {!isUppercase ? (

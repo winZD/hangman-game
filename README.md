@@ -19,3 +19,8 @@ Hangman game
 
 - Start the application with npm run dev
 - Open your browser on http://localhost:5173/
+
+### Play game
+
+- Enter your name
+- Use your mouse for entering letters
