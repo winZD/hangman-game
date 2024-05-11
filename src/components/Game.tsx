@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { Button, Card } from "@mantine/core";
+import { Badge, Button, Card, Group } from "@mantine/core";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import GameFigure from "./GameFigure";
@@ -127,7 +127,6 @@ export const Game = () => {
         {gameWon && <p>Game won</p>}
         <div>
           <GameFigure errors={errors} />
-
           <h1>{logInData.name + " "}Enter the game</h1>
           {maskedQuote?.split("").map((char, index) =>
             char === "_" ? (
@@ -138,8 +137,9 @@ export const Game = () => {
               char
             )
           )}
-
-          <p>Errors: {errors}</p>
+          <p>
+            <Badge color={errors ? "red" : "green"}>Errors: {errors}</Badge>
+          </p>
 
           <div>
             <div>
@@ -171,49 +171,57 @@ export const Game = () => {
             CAPS LOCK
           </button> */}
           </div>
-          <Button
-            disabled={errors >= 6}
-            onClick={async () => {
-              await dispatch(getQuoteThunk()).then((data) => {
-                setQuote(data?.payload as Quote);
-                setMaskedQuote(
-                  (data?.payload as Quote).content.replace(/[a-zA-Z]/g, "_")
-                );
-              });
-              setErrors(0);
-              clearInterval(interval.current);
-              setTimer(0);
-              interval.current = setInterval(() => {
-                setTimer((prevTimer) => prevTimer + 1);
-              }, 1000);
-            }}
-          >
-            Refresh
-          </Button>
-          <Button
-            onClick={async () =>
-              await dispatch(
-                highscoreThunk({
-                  userName: logInData.name,
-                  duration: timer * 1000,
-                  errors: errors,
-                  quoteId: quote?._id || "",
-                  length: quote?.length || 0,
-                  uniqueCharacters: countUniqueCharacters(quote?.content || ""),
-                })
-              )
-            }
-          >
-            Send highscore
-          </Button>
-          <Button
+          <Group justify="center">
+            <Button
+              mt="md"
+              disabled={errors >= 6}
+              onClick={async () => {
+                await dispatch(getQuoteThunk()).then((data) => {
+                  setQuote(data?.payload as Quote);
+                  setMaskedQuote(
+                    (data?.payload as Quote).content.replace(/[a-zA-Z]/g, "_")
+                  );
+                });
+                setErrors(0);
+                clearInterval(interval.current);
+                setTimer(0);
+                interval.current = setInterval(() => {
+                  setTimer((prevTimer) => prevTimer + 1);
+                }, 1000);
+              }}
+            >
+              Refresh
+            </Button>
+            <Button
+              mt="md"
+              color={gameWon ? "green" : ""}
+              disabled={!gameWon}
+              onClick={async () =>
+                await dispatch(
+                  highscoreThunk({
+                    userName: logInData.name,
+                    duration: timer * 1000,
+                    errors: errors,
+                    quoteId: quote?._id || "",
+                    length: quote?.length || 0,
+                    uniqueCharacters: countUniqueCharacters(
+                      quote?.content || ""
+                    ),
+                  })
+                )
+              }
+            >
+              Send highscore
+            </Button>
+          </Group>
+          {/*   <Button
             onClick={() => {
               //setTimerStarted(false);
               clearInterval(interval.current);
             }}
           >
             STOP TImer
-          </Button>
+          </Button> */}
           {/*  <Button
           onClick={() => {
             setTimerStarted(true);
