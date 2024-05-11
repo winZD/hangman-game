@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import getHighscores from "../services/getHighscores";
-import { UserHighscore } from "../models/userHighscores";
+import { UserHighscore } from "../models/userHighscore";
 
 const initialState: { data: UserHighscore[] } = {
   data: [],

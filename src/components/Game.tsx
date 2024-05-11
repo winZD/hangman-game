@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@mantine/core";
+import { Button, Card } from "@mantine/core";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import GameFigure from "./GameFigure";
@@ -77,9 +77,12 @@ export const Game = () => {
 
         maskedQuoteArray[i] = guessedLetter.toLowerCase();
       } */
-      if (quote[i] === guessedLetter && maskedQuoteArray[i] === "_") {
+      if (
+        quote[i] === guessedLetter.toLowerCase() &&
+        maskedQuoteArray[i] === "_"
+      ) {
         {
-          maskedQuoteArray[i] = guessedLetter;
+          maskedQuoteArray[i] = guessedLetter.toLowerCase();
         }
       }
       if (
@@ -117,96 +120,109 @@ export const Game = () => {
   useEffect(() => {
     fetchText();
     /* dispatch(getQuoteThunk()); */
-  }, [dispatch]);
+  }, []);
 
   return (
     <>
-      <div>
-        {" "}
-        <p>Timer: {timer}</p>
-      </div>
-      {gameWon && <p>Game won</p>}
-      <div>
-        <GameFigure errors={errors} />
-
-        <h1>{logInData.name + " "}Enter the game</h1>
-        {maskedQuote.split("").map((char, index) =>
-          char === "_" ? (
-            <span style={{ padding: 2 }} key={index}>
-              {"_"}
-            </span>
-          ) : (
-            char
-          )
-        )}
-
-        <p>Errors: {errors}</p>
-
+      <Card shadow="sm" padding="lg" radius="md" withBorder>
         <div>
+          {" "}
+          <p>Timer: {timer}</p>
+        </div>
+        {gameWon && <p>Game won</p>}
+        <div>
+          <GameFigure errors={errors} />
+
+          <h1>{logInData.name + " "}Enter the game</h1>
+          {maskedQuote.split("").map((char, index) =>
+            char === "_" ? (
+              <span style={{ padding: 2 }} key={index}>
+                {"_"}
+              </span>
+            ) : (
+              char
+            )
+          )}
+
+          <p>Errors: {errors}</p>
+
           <div>
-            {keyboardLetters.slice(0, 13).map((letter) => (
-              <button
-                style={{ margin: 3 }}
-                key={letter}
-                onClick={() => handleLetterGuess(letter)}
-              >
-                {letter}
-              </button>
-            ))}
-          </div>
-          <div>
-            {keyboardLetters.slice(13).map((letter) => (
-              <button
-                style={{ margin: 3 }}
-                key={letter}
-                onClick={() => handleLetterGuess(letter)}
-              >
-                {letter}
-              </button>
-            ))}
-          </div>
-          {/*   <button
+            <div>
+              {keyboardLetters.slice(0, 13).map((letter) => (
+                <button
+                  style={{ margin: 3 }}
+                  key={letter}
+                  onClick={() => handleLetterGuess(letter)}
+                >
+                  {letter}
+                </button>
+              ))}
+            </div>
+            <div>
+              {keyboardLetters.slice(13).map((letter) => (
+                <button
+                  style={{ margin: 3 }}
+                  key={letter}
+                  onClick={() => handleLetterGuess(letter)}
+                >
+                  {letter}
+                </button>
+              ))}
+            </div>
+            {/*   <button
             style={{ background: isUppercase ? "green" : "red" }}
             onClick={() => setUppercase(!isUppercase)}
           >
             CAPS LOCK
           </button> */}
-        </div>
-        <Button disabled={errors >= 6} onClick={async () => await fetchText()}>
-          Refresh
-        </Button>
-        <Button
-          onClick={async () =>
-            await dispatch(
-              highscoreThunk({
-                userName: "sas",
-                duration: timer * 1000,
-                errors: errors,
-                quoteId: "",
-                length: 2,
-                uniqueCharacters: 2,
-              })
-            )
-          }
-        >
-          Send highscore
-        </Button>
-        <Button
-          onClick={() => {
-            //setTimerStarted(false);
-            clearInterval(interval.current);
-          }}
-        >
-          STOP TImer
-        </Button>
-        {/*  <Button
+          </div>
+          <Button
+            disabled={errors >= 6}
+            onClick={async () => {
+              await fetchText();
+              setErrors(0);
+              clearInterval(interval.current);
+              setTimer(0);
+              interval.current = setInterval(() => {
+                setTimer((prevTimer) => prevTimer + 1);
+              }, 1000);
+            }}
+          >
+            Refresh
+          </Button>
+          <Button
+            onClick={async () =>
+              await dispatch(
+                highscoreThunk({
+                  userName: logInData.name,
+                  duration: timer * 1000,
+                  errors: errors,
+                  quoteId: "",
+                  length: 2,
+                  uniqueCharacters: 2,
+                })
+              )
+            }
+          >
+            Send highscore
+          </Button>
+          <Button
+            onClick={() => {
+              //setTimerStarted(false);
+              clearInterval(interval.current);
+            }}
+          >
+            STOP TImer
+          </Button>
+          {/*  <Button
           onClick={() => {
             setTimerStarted(true);
           }}
         >
           START TImer
         </Button> */}
-      </div>
+        </div>
+      </Card>
     </>
   );
 };

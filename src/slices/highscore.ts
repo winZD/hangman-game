@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { HighscoreParams, postHighscore } from "../services/highscore";
+import { HighscoreParams, postHighscore } from "../services/postHighscore";
 import { Highscore } from "../models/highscore";
 
 const initialState: Highscore = {

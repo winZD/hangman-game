@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserHighscore } from "../models/userHighscores";
+import { UserHighscore } from "../models/userHighscore";
 
 const getHighscores = async (): Promise<UserHighscore[]> => {
   const response = await axios.get<UserHighscore[]>(

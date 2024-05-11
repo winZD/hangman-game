@@ -11,10 +11,14 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import { Highscores } from "./components/Highscores.tsx";
+import { Game } from "./components/Game.tsx";
+import { Login } from "./components/Login.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
+    <Route element={<App />}>
+      <Route path="/" element={<Login />} />
+      <Route path="play" element={<Game />} />
       <Route path="highscores" element={<Highscores />} />
     </Route>
   )

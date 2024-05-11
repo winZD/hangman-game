@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { HighscoreParams } from "../services/highscore";
+import { HighscoreParams } from "../services/postHighscore";
 import getHighscores from "../services/getHighscores";
 import getQuote from "../services/getQuote";
 import { Quote } from "../models/quote";
