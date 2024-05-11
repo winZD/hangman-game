@@ -11,10 +11,15 @@ import { keyboardLetters } from "../models/letters";
 import { getQuoteThunk } from "../slices/quote";
 import { Quote } from "../models/quote";
 
+import { getHighscoresThunk } from "../slices/highscores";
+import { useLocation } from "react-router-dom";
+import { Highscores } from "./Highscores";
+
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const Game = () => {
   const logInData = useSelector((state: RootState) => state.logIn);
-
+  let location = useLocation();
+  const [show, setShow] = useState<boolean>(false);
   const [quote, setQuote] = useState<Quote>();
   const [maskedQuote, setMaskedQuote] = useState<string>("");
   const [errors, setErrors] = useState(0);
@@ -22,18 +27,6 @@ export const Game = () => {
   const [isUppercase, setUppercase] = useState(false);
 
   const dispatch = useAppDispatch();
-
-  /*   const fetchText = async () => {
-    try {
-      const response = await axios.get("https://api.quotable.io/random");
-      console.log(response);
-      const { content } = response.data;
-      setQuote(content);
-      setMaskedQuote(content.replace(/[a-zA-Z]/g, "_"));
-    } catch (error) {
-      console.error(error);
-    }
-  }; */
 
   const handleLetterGuess = (letter: string) => {
     if (
@@ -212,6 +205,14 @@ export const Game = () => {
             >
               Send highscore
             </Button>
+            <Button
+              mt="md"
+              onClick={async () => {
+                setShow(!show);
+              }}
+            >
+              Show/hide scores
+            </Button>
           </Group>
           {/*   <Button
             onClick={() => {
@@ -230,6 +231,7 @@ export const Game = () => {
         </Button> */}
         </div>
       </Card>
+      {show ? <Highscores /> : <div></div>}
     </>
   );
 };

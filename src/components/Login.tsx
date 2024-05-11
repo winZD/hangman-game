@@ -22,6 +22,7 @@ export const Login = () => {
           placeholder="name"
         />
         <Button
+          mt="md"
           disabled={!value.length}
           variant="filled"
           onClick={() => {
