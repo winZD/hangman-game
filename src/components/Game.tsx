@@ -21,9 +21,6 @@ export const Game = () => {
   const [isUppercase, setUppercase] = useState(false);
 
   const dispatch = useAppDispatch();
-  /* 
-  const [correctLetters, setCorrectLetters] = useState<string[]>([""]);
-  const [wrongLetters, setWrongLetters] = useState<string[]>([""]); */
 
   const fetchText = async () => {
     try {
@@ -38,15 +35,10 @@ export const Game = () => {
   };
 
   const handleLetterGuess = (letter: string) => {
-    /* const lowerCaseLetter = letter.toLowerCase(); */
-    const letterToUppercase = letter.toUpperCase(); // Ensure the comparison is case-insensitive
-    /*  if (!isUppercase && quote.includes(lowerCaseLetter)) {
-      console.log("LOWERCASE: ", lowerCaseLetter);
-      const newMaskedQuote = replaceUnderscores(maskedQuote, lowerCaseLetter);
-      setMaskedQuote(newMaskedQuote);
-    } */
-    if (quote.includes(letter)) {
-      console.log("UPPERCASE: ", letter);
+    if (
+      quote.includes(letter.toLowerCase()) ||
+      quote.includes(letter.toUpperCase())
+    ) {
       const newMaskedQuote = replaceUnderscores(maskedQuote, letter);
       setMaskedQuote(newMaskedQuote);
     }
@@ -65,18 +57,7 @@ export const Game = () => {
     // Convert the maskedQuote to an array
     const maskedQuoteArray = maskedQuote.split("");
 
-    // Iterate over the original quote
     for (let i = 0; i < quote.length; i++) {
-      // If the original quote at this position matches the guessed letter
-      // and the maskedQuote at this position is an underscore
-      /*  if (
-        quote[i] === guessedLetter.toLowerCase() &&
-        maskedQuoteArray[i] === "_"
-      ) {
-        // Replace the underscore with the guessed letter
-
-        maskedQuoteArray[i] = guessedLetter.toLowerCase();
-      } */
       if (
         quote[i] === guessedLetter.toLowerCase() &&
         maskedQuoteArray[i] === "_"
