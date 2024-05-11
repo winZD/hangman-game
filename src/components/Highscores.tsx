@@ -3,16 +3,18 @@ import { useAppDispatch } from "./Game";
 import { getHighscoresThunk } from "../slices/highscores";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { Table } from "@mantine/core";
-import { UserHighscore } from "../services/getHighscores";
+import { Card, Table } from "@mantine/core";
+import { UserHighscore } from "../models/userHighscore";
 
 export const Highscores = () => {
-  const highscores = useSelector((state: RootState) => state.highscores.data);
+  const highscores = useSelector(
+    (state: RootState) => state.highscores?.data || []
+  );
   const dispatch = useAppDispatch();
 
   const sortByHighscore = (data: UserHighscore[]) => {
     if (data.length) {
-      const sortedHighscores = [...data].sort((a, b) => {
+      const sortedHighscores = [...data]?.sort((a, b) => {
         // Calculate score for each element
         const scoreA = 100 / 1 + a.errors;
         const scoreB = 100 / 1 + b.errors;
@@ -32,14 +34,13 @@ export const Highscores = () => {
     </Table.Tr>
   ));
 
-  console.log(highscores);
   useEffect(() => {
     dispatch(getHighscoresThunk());
   }, []);
   return (
-    <div>
+    <Card shadow="sm" padding="lg" radius="md" withBorder>
       {" "}
-      <Table>
+      <Table stickyHeader striped highlightOnHover>
         <Table.Thead>
           <Table.Tr>
             <Table.Th>User name</Table.Th>
@@ -48,6 +49,6 @@ export const Highscores = () => {
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
       </Table>
-    </div>
+    </Card>
   );
 };

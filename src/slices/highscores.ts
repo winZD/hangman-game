@@ -3,9 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import getHighscores from "../services/getHighscores";
 import { UserHighscore } from "../models/userHighscore";
 
-const initialState: { data: UserHighscore[] } = {
-  data: [],
-};
+const initialState: { data: UserHighscore[] } = { data: [] };
 
 export const getHighscoresThunk = createAsyncThunk(
   "highscore/getHighscoreThunk",
