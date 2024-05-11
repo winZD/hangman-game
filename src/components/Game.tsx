@@ -166,17 +166,31 @@ export const Game = () => {
                 ))}
               </div>
             )}
-            <div>
-              {keyboardLetters.slice(13).map((letter) => (
-                <button
-                  style={{ margin: 3 }}
-                  key={letter}
-                  onClick={() => handleLetterGuess(letter)}
-                >
-                  {letter}
-                </button>
-              ))}
-            </div>
+            {!isUppercase ? (
+              <div>
+                {keyboardLetters.slice(13).map((letter) => (
+                  <button
+                    style={{ margin: 3 }}
+                    key={letter}
+                    onClick={() => handleLetterGuess(letter)}
+                  >
+                    {letter}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div>
+                {KEYBOARD_LETTERS.slice(13).map((letter) => (
+                  <button
+                    style={{ margin: 3 }}
+                    key={letter}
+                    onClick={() => handleLetterGuess(letter)}
+                  >
+                    {letter}
+                  </button>
+                ))}
+              </div>
+            )}
             {
               <button
                 style={{ background: isUppercase ? "green" : "red" }}
