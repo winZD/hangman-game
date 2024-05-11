@@ -9,20 +9,22 @@ import GameFigure from "./GameFigure";
 import { highscoreThunk } from "../slices/highscore";
 
 import { keyboardLetters } from "../models/letters";
+import { getQuoteThunk } from "../slices/quote";
+import { Quote } from "../models/quote";
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const Game = () => {
   const logInData = useSelector((state: RootState) => state.logIn);
   const quotes = useSelector((state: RootState) => state.quote);
-  const [quote, setQuote] = useState("");
-  const [maskedQuote, setMaskedQuote] = useState("");
+  const [quote, setQuote] = useState<Quote>();
+  const [maskedQuote, setMaskedQuote] = useState<string>("");
   const [errors, setErrors] = useState(0);
   const [gameWon, setGameWon] = useState(false);
   const [isUppercase, setUppercase] = useState(false);
 
   const dispatch = useAppDispatch();
 
-  const fetchText = async () => {
+  /*   const fetchText = async () => {
     try {
       const response = await axios.get("https://api.quotable.io/random");
       console.log(response);
@@ -32,19 +34,19 @@ export const Game = () => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }; */
 
   const handleLetterGuess = (letter: string) => {
     if (
-      quote.includes(letter.toLowerCase()) ||
-      quote.includes(letter.toUpperCase())
+      quote?.content.includes(letter.toLowerCase()) ||
+      quote?.content.includes(letter.toUpperCase())
     ) {
-      const newMaskedQuote = replaceUnderscores(maskedQuote, letter);
+      const newMaskedQuote = replaceUnderscores(maskedQuote!, letter);
       setMaskedQuote(newMaskedQuote);
     }
     if (
-      !quote.includes(letter.toLowerCase()) &&
-      !quote.includes(letter.toUpperCase())
+      !quote?.content.includes(letter.toLowerCase()) &&
+      !quote?.content.includes(letter.toUpperCase())
     ) {
       // Increment the error count if the letter is not found and is not uppercase
       setErrors(errors + 1);
@@ -55,11 +57,11 @@ export const Game = () => {
 
   const replaceUnderscores = (maskedQuote: string, guessedLetter: string) => {
     // Convert the maskedQuote to an array
-    const maskedQuoteArray = maskedQuote.split("");
+    const maskedQuoteArray = maskedQuote?.split("");
 
-    for (let i = 0; i < quote.length; i++) {
+    for (let i = 0; i < quote!.content.length; i++) {
       if (
-        quote[i] === guessedLetter.toLowerCase() &&
+        quote?.content[i] === guessedLetter.toLowerCase() &&
         maskedQuoteArray[i] === "_"
       ) {
         {
@@ -67,7 +69,7 @@ export const Game = () => {
         }
       }
       if (
-        quote[i] === guessedLetter.toUpperCase() &&
+        quote?.content[i] === guessedLetter.toUpperCase() &&
         maskedQuoteArray[i] === "_"
       ) {
         {
@@ -75,7 +77,9 @@ export const Game = () => {
         }
       }
     }
-    if (maskedQuoteArray.join("").toUpperCase() === quote) {
+    if (
+      maskedQuoteArray.join("").toUpperCase() === quote?.content.toUpperCase()
+    ) {
       setGameWon(true);
       setTimerStarted(false);
       clearInterval(interval.current);
@@ -98,9 +102,19 @@ export const Game = () => {
     return () => clearInterval(interval.current);
   }, [timerStarted]);
 
+  function countUniqueCharacters(input: string): number {
+    const lowerCaseInput = input.toLowerCase();
+    const uniqueCharacters = new Set(lowerCaseInput.split(""));
+    return uniqueCharacters.size;
+  }
   useEffect(() => {
-    fetchText();
-    /* dispatch(getQuoteThunk()); */
+    /*  fetchText(); */
+    dispatch(getQuoteThunk()).then((data) => {
+      setQuote(data?.payload as Quote);
+      setMaskedQuote(
+        (data?.payload as Quote).content.replace(/[a-zA-Z]/g, "_")
+      );
+    });
   }, []);
 
   return (
@@ -115,7 +129,7 @@ export const Game = () => {
           <GameFigure errors={errors} />
 
           <h1>{logInData.name + " "}Enter the game</h1>
-          {maskedQuote.split("").map((char, index) =>
+          {maskedQuote?.split("").map((char, index) =>
             char === "_" ? (
               <span style={{ padding: 2 }} key={index}>
                 {"_"}
@@ -160,7 +174,12 @@ export const Game = () => {
           <Button
             disabled={errors >= 6}
             onClick={async () => {
-              await fetchText();
+              await dispatch(getQuoteThunk()).then((data) => {
+                setQuote(data?.payload as Quote);
+                setMaskedQuote(
+                  (data?.payload as Quote).content.replace(/[a-zA-Z]/g, "_")
+                );
+              });
               setErrors(0);
               clearInterval(interval.current);
               setTimer(0);
@@ -178,9 +197,9 @@ export const Game = () => {
                   userName: logInData.name,
                   duration: timer * 1000,
                   errors: errors,
-                  quoteId: "",
-                  length: 2,
-                  uniqueCharacters: 2,
+                  quoteId: quote?._id || "",
+                  length: quote?.length || 0,
+                  uniqueCharacters: countUniqueCharacters(quote?.content || ""),
                 })
               )
             }
