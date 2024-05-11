@@ -118,6 +118,7 @@ export const Game = () => {
               closeButtonProps={{ "aria-label": "Hide notification" }}
               color="red"
               title="We notify you that"
+              withCloseButton={false}
             >
               You lose!
             </Notification>

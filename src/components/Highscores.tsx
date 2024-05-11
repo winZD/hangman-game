@@ -43,8 +43,8 @@ export const Highscores = () => {
       <Table stickyHeader striped highlightOnHover>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>User name</Table.Th>
-            <Table.Th>highscore</Table.Th>
+            <Table.Th style={{ textAlign: "center" }}>User name</Table.Th>
+            <Table.Th style={{ textAlign: "center" }}>highscore</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
