@@ -1,24 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-
 import { useEffect, useRef, useState } from "react";
-import { Badge, Button, Card, Group } from "@mantine/core";
-
+import { Badge, Button, Card, Group, Notification } from "@mantine/core";
 import GameFigure from "./GameFigure";
 import { highscoreThunk } from "../slices/highscore";
-
-import { keyboardLetters } from "../models/letters";
+import { KEYBOARD_LETTERS, keyboardLetters } from "../models/letters";
 import { getQuoteThunk } from "../slices/quote";
 import { Quote } from "../models/quote";
 
-import { getHighscoresThunk } from "../slices/highscores";
-import { useLocation } from "react-router-dom";
 import { Highscores } from "./Highscores";
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
+
 export const Game = () => {
   const logInData = useSelector((state: RootState) => state.logIn);
-  let location = useLocation();
+
   const [show, setShow] = useState<boolean>(false);
   const [quote, setQuote] = useState<Quote>();
   const [maskedQuote, setMaskedQuote] = useState<string>("");
@@ -118,8 +114,19 @@ export const Game = () => {
         </div>
         {gameWon && <p>Game won</p>}
         <div>
+          {errors >= 6 && (
+            <Notification
+              closeButtonProps={{ "aria-label": "Hide notification" }}
+              color="red"
+              title="We notify you that"
+            >
+              You lose!
+            </Notification>
+          )}
           <GameFigure errors={errors} />
-          <h1>{logInData.name + " "}Enter the game</h1>
+          <h1>
+            {"Player: " + (logInData.name.length ? logInData.name : "Guest")}
+          </h1>
           {maskedQuote?.split("").map((char, index) =>
             char === "_" ? (
               <span style={{ padding: 2 }} key={index}>
@@ -134,17 +141,31 @@ export const Game = () => {
           </p>
 
           <div>
-            <div>
-              {keyboardLetters.slice(0, 13).map((letter) => (
-                <button
-                  style={{ margin: 3 }}
-                  key={letter}
-                  onClick={() => handleLetterGuess(letter)}
-                >
-                  {letter}
-                </button>
-              ))}
-            </div>
+            {!isUppercase ? (
+              <div>
+                {keyboardLetters.slice(0, 13).map((letter) => (
+                  <button
+                    style={{ margin: 3 }}
+                    key={letter}
+                    onClick={() => handleLetterGuess(letter)}
+                  >
+                    {letter}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div>
+                {KEYBOARD_LETTERS.slice(0, 13).map((letter) => (
+                  <button
+                    style={{ margin: 3 }}
+                    key={letter}
+                    onClick={() => handleLetterGuess(letter)}
+                  >
+                    {letter}
+                  </button>
+                ))}
+              </div>
+            )}
             <div>
               {keyboardLetters.slice(13).map((letter) => (
                 <button
@@ -156,17 +177,18 @@ export const Game = () => {
                 </button>
               ))}
             </div>
-            {/*   <button
-            style={{ background: isUppercase ? "green" : "red" }}
-            onClick={() => setUppercase(!isUppercase)}
-          >
-            CAPS LOCK
-          </button> */}
+            {
+              <button
+                style={{ background: isUppercase ? "green" : "red" }}
+                onClick={() => setUppercase(!isUppercase)}
+              >
+                CAPS LOCK
+              </button>
+            }
           </div>
           <Group justify="center">
             <Button
               mt="md"
-              disabled={errors >= 6}
               onClick={async () => {
                 await dispatch(getQuoteThunk()).then((data) => {
                   setQuote(data?.payload as Quote);
@@ -214,21 +236,6 @@ export const Game = () => {
               Show/hide scores
             </Button>
           </Group>
-          {/*   <Button
-            onClick={() => {
-              //setTimerStarted(false);
-              clearInterval(interval.current);
-            }}
-          >
-            STOP TImer
-          </Button> */}
-          {/*  <Button
-          onClick={() => {
-            setTimerStarted(true);
-          }}
-        >
-          START TImer
-        </Button> */}
         </div>
       </Card>
       {show ? <Highscores /> : <div></div>}
