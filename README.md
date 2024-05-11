@@ -13,9 +13,7 @@ Hangman game
 
 1. Clone the repository: https://github.com/winZD/hangman-game.git
 
-2. Navigate to the project directory:
-
-3. Npm install
+2. Npm install
 
 ### Running the Application
 
