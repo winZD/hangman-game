@@ -11,7 +11,7 @@ Hangman game
 
 ### Installation
 
-1. Clone the repository:
+1. Clone the repository: https://github.com/winZD/hangman-game.git
 
 2. Navigate to the project directory:
 
