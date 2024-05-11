@@ -1,10 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-import axios from "axios";
+
 import { useEffect, useRef, useState } from "react";
 import { Badge, Button, Card, Group } from "@mantine/core";
-import Keyboard from "react-simple-keyboard";
-import "react-simple-keyboard/build/css/index.css";
+
 import GameFigure from "./GameFigure";
 import { highscoreThunk } from "../slices/highscore";
 
@@ -15,7 +14,7 @@ import { Quote } from "../models/quote";
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const Game = () => {
   const logInData = useSelector((state: RootState) => state.logIn);
-  const quotes = useSelector((state: RootState) => state.quote);
+
   const [quote, setQuote] = useState<Quote>();
   const [maskedQuote, setMaskedQuote] = useState<string>("");
   const [errors, setErrors] = useState(0);
