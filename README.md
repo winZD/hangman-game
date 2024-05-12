@@ -12,7 +12,7 @@ Hangman game
 ### Installation
 
 1. Clone the repository: https://github.com/winZD/hangman-game.git
-2. cd hangman-game
+2. cd hangman-game(if you are not positioned in folder)
 3. npm install
 
 ### Running the Application
