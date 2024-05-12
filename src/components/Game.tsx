@@ -71,8 +71,8 @@ export const Game = () => {
       setGameWon(true);
       setTimerStarted(false);
       clearInterval(interval.current);
-      alert("GAME WON");
     }
+
     // Convert the array back into a string
 
     return maskedQuoteArray.join("");
@@ -201,7 +201,7 @@ export const Game = () => {
                 style={{ background: isUppercase ? "green" : "red" }}
                 onClick={() => setUppercase(!isUppercase)}
               >
-                CAPS LOCK
+                Caps Lock
               </button>
             }
           </div>
