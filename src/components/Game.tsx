@@ -39,8 +39,6 @@ export const Game = () => {
       // Increment the error count if the letter is not found and is not uppercase
       setErrors(errors + 1);
     }
-
-    console.log(isUppercase ? letter.toUpperCase() : letter.toLowerCase());
   };
 
   const replaceUnderscores = (maskedQuote: string, guessedLetter: string) => {
@@ -89,6 +87,12 @@ export const Game = () => {
 
     return () => clearInterval(interval.current);
   }, [timerStarted]);
+
+  useEffect(() => {
+    if (errors === 6) {
+      clearInterval(interval.current);
+    }
+  }, [errors]);
 
   function countUniqueCharacters(input: string): number {
     const lowerCaseInput = input.toLowerCase();
