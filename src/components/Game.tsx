@@ -80,7 +80,7 @@ export const Game = () => {
   const [timer, setTimer] = useState(0);
   const [timerStarted, setTimerStarted] = useState(false);
 
-  const interval = useRef<number>();
+  const interval = useRef<NodeJS.Timeout | undefined>();
 
   useEffect(() => {
     interval.current = setInterval(() => {
@@ -119,6 +119,7 @@ export const Game = () => {
               color="red"
               title="We notify you that"
               withCloseButton={false}
+              withBorder
             >
               You lose!
             </Notification>
@@ -145,6 +146,7 @@ export const Game = () => {
               <div>
                 {keyboardLetters.slice(0, 13).map((letter) => (
                   <button
+                    disabled={errors === 6}
                     style={{ margin: 3 }}
                     key={letter}
                     onClick={() => handleLetterGuess(letter)}
@@ -157,6 +159,7 @@ export const Game = () => {
               <div>
                 {KEYBOARD_LETTERS.slice(0, 13).map((letter) => (
                   <button
+                    disabled={errors === 6}
                     style={{ margin: 3 }}
                     key={letter}
                     onClick={() => handleLetterGuess(letter)}
@@ -170,6 +173,7 @@ export const Game = () => {
               <div>
                 {keyboardLetters.slice(13).map((letter) => (
                   <button
+                    disabled={errors === 6}
                     style={{ margin: 3 }}
                     key={letter}
                     onClick={() => handleLetterGuess(letter)}
@@ -182,6 +186,7 @@ export const Game = () => {
               <div>
                 {KEYBOARD_LETTERS.slice(13).map((letter) => (
                   <button
+                    disabled={errors === 6}
                     style={{ margin: 3 }}
                     key={letter}
                     onClick={() => handleLetterGuess(letter)}
