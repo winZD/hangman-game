@@ -64,7 +64,7 @@ export const Highscores = () => {
         <Table.Thead>
           <Table.Tr>
             <Table.Th style={{ textAlign: "center" }}>User name</Table.Th>
-            <Table.Th style={{ textAlign: "center" }}>highscore</Table.Th>
+            <Table.Th style={{ textAlign: "center" }}>Highscore</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
