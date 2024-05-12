@@ -20,6 +20,15 @@ Hangman game
 - Start the application with npm run dev
 - Open your browser on http://localhost:5173/
 
+### Running unit test
+
+- file is located in src/**tests** folder
+- to run test use: npm run test
+
+### Smarter function
+
+- Smarter function is located in src/utils folder
+
 ### Play game
 
 - Enter your name
