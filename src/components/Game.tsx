@@ -14,7 +14,9 @@ export const useAppDispatch = () => useDispatch<AppDispatch>();
 
 export const Game = () => {
   const logInData = useSelector((state: RootState) => state.logIn);
-
+  const [timer, setTimer] = useState(0);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const interval = useRef<NodeJS.Timeout | undefined>();
   const [show, setShow] = useState<boolean>(false);
   const [quote, setQuote] = useState<Quote>();
   const [maskedQuote, setMaskedQuote] = useState<string>("");
@@ -24,11 +26,21 @@ export const Game = () => {
 
   const dispatch = useAppDispatch();
 
+  /**
+   * Handles the guessing of letters by the user.
+   *
+   * @param {string} letter - The letter guessed by the user.
+   *
+   * This function checks if the guessed letter is present in the quote content, either in lowercase or uppercase.
+   * If the letter is found, it replaces the corresponding underscore in the masked quote with the guessed letter.
+   * If the letter is not found, it increments the error count.
+   */
   const handleLetterGuess = (letter: string) => {
     if (
       quote?.content.includes(letter.toLowerCase()) ||
       quote?.content.includes(letter.toUpperCase())
     ) {
+      // Replace underscores in the masked quote with the guessed letter
       const newMaskedQuote = replaceUnderscores(maskedQuote!, letter);
       setMaskedQuote(newMaskedQuote);
     }
@@ -41,6 +53,19 @@ export const Game = () => {
     }
   };
 
+  /**
+   * Replaces underscores in the masked quote with the guessed letter(s).
+   *
+   * @param {string} maskedQuote - The current masked quote string.
+   * @param {string} guessedLetter - The letter guessed by the user.
+   *
+   * This function iterates through the masked quote and the quote content simultaneously.
+   * If the guessed letter matches a character in the quote content and the corresponding position in the masked quote is an underscore,
+   * it replaces the underscore with the guessed letter. If the entire masked quote matches the original quote content after replacements,
+   * it indicates that the game has been won, and it stops the timer.
+   *
+   * @returns {string} - The updated masked quote with underscores replaced by the guessed letter(s).
+   */
   const replaceUnderscores = (maskedQuote: string, guessedLetter: string) => {
     // Convert the maskedQuote to an array
     const maskedQuoteArray = maskedQuote?.split("");
@@ -75,30 +100,54 @@ export const Game = () => {
 
     return maskedQuoteArray.join("");
   };
-  const [timer, setTimer] = useState(0);
-  const [timerStarted, setTimerStarted] = useState(false);
 
-  const interval = useRef<NodeJS.Timeout | undefined>();
+  /**
+   * Counts the number of unique characters in the given input string.
+   *
+   * @param {string} input - The input string to count unique characters from.
+   * @returns {number} The number of unique characters in the input string.
+   *
+   * @example
+   * countUniqueCharacters("Hello World"); // Returns 10
+   * countUniqueCharacters("Programming"); // Returns 9
+   */
+  function countUniqueCharacters(input: string): number {
+    const lowerCaseInput = input.toLowerCase(); // Convert the input to lowercase
+    const uniqueCharacters = new Set(lowerCaseInput.split("")); // Create a Set from the split characters
+    return uniqueCharacters.size; // Return the size of the Set, which represents the number of unique characters
+  }
 
+  /**
+   * Sets up an interval that increments a timer every second when the component mounts
+   * and clears the interval when the component unmounts or when the timer starts.
+   * It also clears the interval if there are exactly 6 errors.
+   */
   useEffect(() => {
+    // Set up an interval that increments the timer every second
     interval.current = setInterval(() => {
       setTimer((prevTimer) => prevTimer + 1);
     }, 1000);
-
+    // Cleanup function to clear the interval when the component unmounts or when the timer starts
     return () => clearInterval(interval.current);
   }, [timerStarted]);
 
+  /**
+   * Clears the interval if there are exactly 6 errors.
+   * This is useful for stopping the timer when an error threshold is reached.
+   */
   useEffect(() => {
     if (errors === 6) {
       clearInterval(interval.current);
     }
   }, [errors]);
 
-  function countUniqueCharacters(input: string): number {
-    const lowerCaseInput = input.toLowerCase();
-    const uniqueCharacters = new Set(lowerCaseInput.split(""));
-    return uniqueCharacters.size;
-  }
+  /**
+   * Dispatches a thunk action to fetch a quote and updates the component's state
+   * with the fetched quote and a masked version of the quote content.
+   * The masked quote replaces all alphabetic characters with underscores.
+   *
+   * This effect runs once when the component mounts because it has an empty dependency array.
+   */
   useEffect(() => {
     dispatch(getQuoteThunk()).then((data) => {
       setQuote(data?.payload as Quote);
